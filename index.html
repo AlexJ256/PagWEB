@@ -1,1 +1,52 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario de Productos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <h1>Listado de Productos</h1>
+    </header>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Precio Compra</th>
+                    <th>Precio Venta</th>
+                    <th>Proveedor</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Ejemplo Producto</td>
+                    <td>10</td>
+                    <td>$1000</td>
+                    <td>$1500</td>
+                    <td>Proveedor A</td>
+                    <td class="actions">
+                        <a href="modificar_producto.html" class="btn btn-edit">Modificar</a>
+                        <form action="eliminar_producto.html" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-delete" onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?');">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="no-data">No hay productos en el inventario.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
+
+
