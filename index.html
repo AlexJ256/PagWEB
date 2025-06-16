@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventario de Productos</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Listado de Productos</h1>
+  </header>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Cantidad</th>
+          <th>Precio Compra</th>
+          <th>Precio Venta</th>
+          <th>Proveedor</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tablaBody">
+        <!-- Los datos se cargarán de forma dinámica -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Función para cargar el inventario usando fetch
+    async function cargarInventario() {
+      try {
+        const response = await fetch('getInventory.php');
+        const data = await response.json();
+        const tablaBody = document.getElementById('tablaBody');
+
+        // Si no hay productos, muestra un mensaje
+        if (data.length === 0) {
+          tablaBody.innerHTML = `<tr><td colspan="6" class="no-data">No hay productos en el inventario.</td></tr>`;
+          return;
+        }
+
+        // Recorrer cada producto y crear la fila correspondiente
+        data.forEach(producto => {
+          const fila = document.createElement('tr');
+          fila.innerHTML = `
+            <td>${producto.nombre}</td>
+            <td>${producto.cantidad}</td>
+            <td>$${producto.precio_compra}</td>
+            <td>$${producto.precio_venta}</td>
+            <td>${producto.proveedor}</td>
+            <td class="actions">
+              <a href="modificar_producto.php?id=${producto.id_producto}" class="btn btn-edit">Modificar</a>
+              <button class="btn btn-delete" onclick="eliminarProducto(${producto.id_producto})">Eliminar</button>
+            </td>
+          `;
+          tablaBody.appendChild(fila);
+        });
+      } catch (error) {
+        console.error('Error cargando el inventario:', error);
+      }
+    }
+
+    // Función simulada para eliminar un producto (debería conectarse a un backend real)
+    function eliminarProducto(id) {
+      if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+        // Aquí podrías hacer una petición AJAX para eliminar el producto en el servidor
+        alert('Producto ' + id + ' eliminado (simulado)');
+      }
+    }
+
+    // Cargar la información una vez que el documento esté completo
+    document.addEventListener('DOMContentLoaded', cargarInventario);
+  </script>
+
+</body>
+</html>
