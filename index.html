@@ -13,7 +13,7 @@
     </header>
 
     <div class="table-container">
-        <table id="productosTabla">
+        <table>
             <thead>
                 <tr>
                     <th>Nombre</th>
@@ -24,61 +24,47 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody id="tablaBody">
+            <tbody>
+                <?php
+                // Conectar a la base de datos
+                $conexion = new mysqli("localhost", "usuario", "contraseña", "inventario_db");
+
+                // Verificar la conexión
+                if ($conexion->connect_error) {
+                    die("Error de conexión: " . $conexion->connect_error);
+                }
+
+                // Consulta para obtener los productos
+                $sql = "SELECT * FROM productos";
+                $resultado = $conexion->query($sql);
+
+                if ($resultado->num_rows > 0) {
+                    while ($producto = $resultado->fetch_assoc()) {
+                        echo "<tr>
+                                <td>{$producto['nombre']}</td>
+                                <td>{$producto['cantidad']}</td>
+                                <td>\${$producto['precio_compra']}</td>
+                                <td>\${$producto['precio_venta']}</td>
+                                <td>{$producto['proveedor']}</td>
+                                <td class='actions'>
+                                    <a href='modificar_producto.php?id={$producto['id_producto']}' class='btn btn-edit'>Modificar</a>
+                                    <form action='eliminar_producto.php' method='POST' style='display:inline;'>
+                                        <input type='hidden' name='id' value='{$producto['id_producto']}'>
+                                        <button type='submit' class='btn btn-delete' onclick=\"return confirm('¿Estás seguro de que quieres eliminar este producto?');\">Eliminar</button>
+                                    </form>
+                                </td>
+                              </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='6' class='no-data'>No hay productos en el inventario.</td></tr>";
+                }
+
+                // Cerrar conexión
+                $conexion->close();
+                ?>
             </tbody>
         </table>
     </div>
-
-    <script>
-        // Datos dinámicos simulados
-        const productos = [
-            { nombre: "Producto A", cantidad: 10, precio_compra: 1000, precio_venta: 1500, proveedor: "Proveedor X", id_producto: 1 },
-            { nombre: "Producto B", cantidad: 5, precio_compra: 2000, precio_venta: 3000, proveedor: "Proveedor Y", id_producto: 2 },
-            { nombre: "Producto C", cantidad: 8, precio_compra: 1200, precio_venta: 1800, proveedor: "Proveedor Z", id_producto: 3 }
-        ];
-
-        // Función para renderizar la tabla con datos dinámicos
-        function cargarProductos() {
-            const tablaBody = document.getElementById("tablaBody");
-            tablaBody.innerHTML = ""; // Limpiar contenido previo
-
-            if (productos.length === 0) {
-                tablaBody.innerHTML = `<tr><td colspan="6" class="no-data">No hay productos en el inventario.</td></tr>`;
-                return;
-            }
-
-            productos.forEach(producto => {
-                const fila = document.createElement("tr");
-                fila.innerHTML = `
-                    <td>${producto.nombre}</td>
-                    <td>${producto.cantidad}</td>
-                    <td>$${producto.precio_compra}</td>
-                    <td>$${producto.precio_venta}</td>
-                    <td>${producto.proveedor}</td>
-                    <td class="actions">
-                        <a href="modificar_producto.html?id=${producto.id_producto}" class="btn btn-edit">Modificar</a>
-                        <button class="btn btn-delete" onclick="eliminarProducto(${producto.id_producto})">Eliminar</button>
-                    </td>
-                `;
-                tablaBody.appendChild(fila);
-            });
-        }
-
-        // Función para eliminar un producto (simulado)
-        function eliminarProducto(id) {
-            const confirmacion = confirm("¿Estás seguro de que quieres eliminar este producto?");
-            if (confirmacion) {
-                const index = productos.findIndex(prod => prod.id_producto === id);
-                if (index !== -1) {
-                    productos.splice(index, 1);
-                    cargarProductos(); // Recargar la tabla con los datos actualizados
-                }
-            }
-        }
-
-        // Cargar la tabla al iniciar la página
-        document.addEventListener("DOMContentLoaded", cargarProductos);
-    </script>
 
 </body>
 </html>
