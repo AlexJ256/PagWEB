@@ -1,7 +1,7 @@
 <?php
 $server = "localhost";
-$username = "usuario";
-$password = "contraseña";
+$username = "root";
+$password = "";
 $database = "inventario_db";
 
 $conexion = new mysqli($server, $username, $password, $database);
